@@ -26,7 +26,8 @@ export const greenApi = {
         if (!response.ok) {
             throw new Error('Ошиба получения сообщения');
         }
-        return await response.json();
+        const text = await response.text();
+        return text ? JSON.parse(text) : null;
     },
     deleteNotification: async (credentials: Credentials, receiptId: number): Promise<DeleteNotificationResponse> => {
         const { idInstance, apiTokenInstance } = credentials;

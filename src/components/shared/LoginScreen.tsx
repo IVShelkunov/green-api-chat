@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Credentials } from "../../types";
 import { FormGroup } from "./FormGroup";
+import { SubmitButton } from "../ui/SubmitButton";
 
 export function LoginScreen({
   onLogin,
@@ -19,9 +20,13 @@ export function LoginScreen({
     onLogin(loginData);
   };
   return (
-    <div className="w-full h-screen md:w-auto md:h-auto flex flex-col items-center justify-center gap-4 bg-linear-to-b from-sky-200 to-white p-6 rounded-2xl">
+    <div className="w-full h-screen md:w-auto md:h-auto flex flex-col items-center justify-center gap-4 bg-linear-to-b from-sky-200 to-white p-6 md:rounded-2xl">
       <h2 className="text-2xl font-medium tracking-widest">LOGIN</h2>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-4"
+        onSubmit={handleSubmit}
+        autoComplete="off"
+      >
         <FormGroup
           id="idInstance"
           title="ID INSTANCE"
@@ -36,15 +41,13 @@ export function LoginScreen({
           value={loginData.apiTokenInstance}
           onChange={handleChangeInputData}
         />
-        <button
+        <SubmitButton
           disabled={
             !loginData.idInstance.trim() || !loginData.apiTokenInstance.trim()
           }
-          className="disabled:bg-blue-500/70 disabled:cursor-not-allowed  bg-blue-500 hover:bg-blue-500/70 p-2 rounded-2xl text-white cursor-pointer"
-          type="submit"
         >
           LOG IN
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );

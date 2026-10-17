@@ -46,4 +46,9 @@ export interface DeleteNotificationResponse {
     result: boolean;
     reason?: string;
 }
+export interface UIMessage {
+    id: string;
+    text: string;
+    isOutgoing: boolean;
+}
 
