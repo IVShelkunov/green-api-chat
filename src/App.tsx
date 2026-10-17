@@ -1,36 +1,38 @@
 import { useState } from "react";
-import { greenApi } from "./api/greenApi";
+import { LoginScreen } from "./components/shared/LoginScreen";
+import type { Credentials } from "./types";
 
 function App() {
-  const [status, setStatus] = useState("");
-
-  // Твои данные из шага 1
-  const idInstance = "410022770198";
-  const apiTokenInstance = "b1df41e9666e435fbd11c179d12358c0574f9dec319b411f8b";
-
-  const handleSend = async () => {
+  const [credentials, setCredentials] = useState<Credentials | null>(() => {
     try {
-      const data = await greenApi.sendMessage(
-        { idInstance, apiTokenInstance },
-        { chatId: "79888939353@c.us", message: "Hello Ilya!" },
-      );
-      setStatus(data.idMessage);
-    } catch (err) {
-      console.log(err);
+      const saved = localStorage.getItem("auth");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
     }
+  });
+  const handleLogin = (data: Credentials) => {
+    setCredentials(data);
+    localStorage.setItem("auth", JSON.stringify(data));
   };
-
   return (
-    <div style={{ padding: 40 }}>
-      <h2>Тест отправки GREEN-API</h2>
-      <button
-        onClick={handleSend}
-        style={{ padding: "10px 20px", cursor: "pointer" }}
-      >
-        Отправить тестовое сообщение
-      </button>
-      <p>{status}</p>
-    </div>
+    <main className="relative w-full h-screen bg-linear-to-br from-blue-950 via-sky-500 to-violet-800 flex items-center justify-center">
+      {credentials ? (
+        <div>You Login!</div>
+      ) : (
+        <LoginScreen onLogin={handleLogin} />
+      )}
+      {credentials && (
+        <button
+          onClick={() => {
+            setCredentials(null);
+            localStorage.removeItem("auth");
+          }}
+        >
+          LOGOUT
+        </button>
+      )}
+    </main>
   );
 }
 
