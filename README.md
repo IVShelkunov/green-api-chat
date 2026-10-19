@@ -1,75 +1,127 @@
-# React + TypeScript + Vite
+# 💬 GREEN-API Messenger (React + TypeScript)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интерфейс веб-мессенджера для обмена текстовыми сообщениями в реальном времени с использованием сервиса **GREEN-API** (HTTP API).  
+Тестовое задание на позицию **«Фронтенд разработчик React»**.
 
-Currently, two official plugins are available:
+🔗 **[ДЕМО СЕРВИСА (Live Demo)](https://green-api-chat-silk.vercel.app/)**  
+📦 **Репозиторий:** [github.com/IVShelkunov/green-api-chat](https://github.com/IVShelkunov/green-api-chat)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🛠 Стек технологий
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Фреймворк:** [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Сборщик:** [Vite](https://vitejs.dev/)
+- **Стилизация:** [Tailwind CSS](https://tailwindcss.com/)
+- **Тестирование:** [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **API:** [GREEN-API](https://green-api.com/) (методы `sendMessage`, `receiveNotification`, `deleteNotification`, `getStateInstance`)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ✨ Реализованный функционал
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Авторизация инстанса:**
+   - Вход по `idInstance` и `apiTokenInstance`.
+   - Предварительная валидация реквизитов через метод `getStateInstance` перед входом в чат.
+   - Безопасное сохранение сессии в `localStorage` с обработкой битого JSON.
+   - Динамическое определение кластера хоста (URL строится автоматически на основе первых 4 цифр `idInstance`).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Создание и выбор диалога:**
+   - Создание нового чата по номеру телефона получателя.
+   - Санитизация и нормализация номеров (удаление спецсимволов, конвертация формата РФ с `8` на `7`, проверка длины по стандарту E.164).
+   - Автоматическое формирование `chatId` (`{phone}@c.us`).
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. **Обмен сообщениями (Messaging flow):**
+   - **Отправка:** Метод `SendMessage`. Оптимистичное обновление ленты с защитой от двойного клика через хук `useTransition`.
+   - **Получение:** Метод `receiveNotification` в фоновом рекурсивном цикле (HTTP Polling).
+   - **Очистка очереди:** Метод `deleteNotification` — немедленное подтверждение получения уведомлений с корректной обработкой пустых ответов (`204 / empty body`).
+   - **UX чата:** Прижатие сообщений снизу вверх (`mt-auto`), автоматический скролл к новому сообщению (`scrollIntoView`).
 
+4. **Адаптивный интерфейс (Mobile-First):**
+   - **Mobile (< 768px):** Полноэкранный переход между экраном создания чата и перепиской с кнопкой «← Назад» в шапке.
+   - **Desktop (≥ 768px):** Классический двухколоночный лэйаут веб-мессенджера (сайдбар + окно переписки).
+
+---
+
+## 🧪 Тестирование
+
+Проект покрыт автоматическими тестами с использованием **Vitest** и **React Testing Library**:
+
+- **13 тестов / 5 тест-сьюта** (100% зеленые).
+
+### Что покрыто тестами:
+
+- **Unit-тесты чистых функций (`src/lib/utils`):**
+  - Нормализация и санитизация номеров телефонов (`phone.test.ts` — очистка символов, замена 8 на 7, валидация граничных длин).
+  - Вычисление базового хоста API по ID инстанса (`apiUtils.test.ts`).
+- **Интеграционные компонентные тесты RTL (`src/components/shared`):**
+  - `OpenChatForm.test.tsx` — проверка блокировки кнопки, вывод ошибки при невалидном номере, успешный сабмит с форматированным `chatId`.
+  - `SendMessageForm.test.tsx` — защита от отправки пустых сообщений, очистка поля после отправки, дизейбл кнопки при активном состоянии `isPending`.
+
+### Запуск тестов:
+
+```bash
+# Запуск полного прогона тестов с подробным описанием:
+npm run test
+
+# Запуск в режиме наблюдения (watch mode):
+npm run test:watch
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Локальный запуск проекта
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Требования:
 
+- [Node.js](https://nodejs.org/) версии 18.0 или выше
+- Менеджер пакетов `npm` (или `yarn` / `pnpm`)
+
+### Инструкция:
+
+1. **Клонируйте репозиторий:**
+
+   ```bash
+   git clone https://github.com/IVShelkunov/green-api-chat.git
+   cd green-api-chat
+   ```
+
+2. **Установите зависимости:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Запустите сервер для разработки:**
+
+   ```bash
+   npm run dev
+   ```
+
+   Приложение откроется по адресу `http://localhost:5173`.
+
+4. **Сборка для продакшна:**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 📁 Структура проекта
+
+```text
+src/
+├── api/             # Слой работы с сетью и GREEN-API (greenApi.ts)
+├── components/      # React-компоненты
+│   ├── icon/        # SVG-иконки
+│   ├── shared/      # Модули экранов (LoginScreen, ChatLayout, ChatScreen, OpenChatForm, MessageList)
+│   └── ui/          # Переиспользуемые атомарные UI-компоненты (SubmitButton, ErrorMessage)
+├── lib/
+│   └── utils/       # Чистые вспомогательные утилиты и тесты к ним (phone.ts, apiUtils.ts)
+└── types/           # Типизация TypeScript (модели API, вебхуков и сущностей интерфейса)
 ```
+
+---
+
+**Разработчик:** Илья Шелкунов  
+**Telegram для связи:** [@IVShelkunow](https://t.me/IVShelkunow)
