@@ -1,24 +1,22 @@
-# 💬 GREEN-API Messenger (React + TypeScript)
+# GREEN-API Messenger (React + TypeScript)
 
-Интерфейс веб-мессенджера для обмена текстовыми сообщениями в реальном времени с использованием сервиса **GREEN-API** (HTTP API).  
-Тестовое задание на позицию **«Фронтенд разработчик React»**.
+Интерфейс веб-мессенджера для обмена текстовыми сообщениями в реальном времени с использованием сервиса **GREEN-API** (HTTP API).
 
-🔗 **[ДЕМО СЕРВИСА (Live Demo)](https://green-api-chat-silk.vercel.app/)**  
-📦 **Репозиторий:** [github.com/IVShelkunov/green-api-chat](https://github.com/IVShelkunov/green-api-chat)
+**[ДЕМО СЕРВИСА (Live Demo)](https://green-api-chat-silk.vercel.app/)**
 
 ---
 
-## 🛠 Стек технологий
+## Стек технологий
 
-- **Фреймворк:** [React](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
-- **Сборщик:** [Vite](https://vitejs.dev/)
-- **Стилизация:** [Tailwind CSS](https://tailwindcss.com/)
-- **Тестирование:** [Vitest](https://vitest.dev/) + [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Фреймворк:** React + TypeScript
+- **Сборщик:** Vite
+- **Стилизация:** Tailwind CSS
+- **Тестирование:** Vitest + React Testing Library
 - **API:** [GREEN-API](https://green-api.com/) (методы `sendMessage`, `receiveNotification`, `deleteNotification`, `getStateInstance`)
 
 ---
 
-## ✨ Реализованный функционал
+## Реализованный функционал
 
 1. **Авторизация инстанса:**
    - Вход по `idInstance` и `apiTokenInstance`.
@@ -43,7 +41,7 @@
 
 ---
 
-## 🧪 Тестирование
+## Тестирование
 
 Проект покрыт автоматическими тестами с использованием **Vitest** и **React Testing Library**:
 
@@ -70,7 +68,7 @@ npm run test:watch
 
 ---
 
-## 🚀 Локальный запуск проекта
+## Локальный запуск проекта
 
 ### Требования:
 
@@ -107,7 +105,7 @@ npm run test:watch
 
 ---
 
-## 📁 Структура проекта
+## Структура проекта
 
 ```text
 src/
@@ -122,6 +120,3 @@ src/
 ```
 
 ---
-
-**Разработчик:** Илья Шелкунов  
-**Telegram для связи:** [@IVShelkunow](https://t.me/IVShelkunow)
