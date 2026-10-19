@@ -28,7 +28,7 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
           </div>
           <div className="">
             <button
-              className="hover:text-red-500 cursor-pointer"
+              className="hover:text-red-500 cursor-pointer font-bold text-xl"
               onClick={onLogout}
             >
               <span className="md:inline hidden">EXIT</span>

@@ -1,4 +1,5 @@
-import type { Credentials, DeleteNotificationResponse, ReceiveNotificationResponse, SendMessagePayload, SendMessageResponse } from "../types";
+import { getBaseUrl } from "../lib/utils/apiUtils";
+import type { Credentials, DeleteNotificationResponse, ReceiveNotificationResponse, SendMessagePayload, SendMessageResponse, StateInstanceResponse } from "../types";
 
 const BASE_URL = 'https://api.green-api.com';
 export const greenApi = {
@@ -14,7 +15,7 @@ export const greenApi = {
             })
         });
         if (!response.ok) {
-            throw new Error('Ошибка отправки сообщения.');
+            throw new Error('Error sending message');
         }
         return await response.json();
 
@@ -24,7 +25,7 @@ export const greenApi = {
         const { idInstance, apiTokenInstance } = credentials;
         const response = await fetch(`${BASE_URL}/waInstance${idInstance}/receiveNotification/${apiTokenInstance}`);
         if (!response.ok) {
-            throw new Error('Ошиба получения сообщения');
+            throw new Error('Error receiving message');
         }
         const text = await response.text();
         return text ? JSON.parse(text) : null;
@@ -35,7 +36,16 @@ export const greenApi = {
             method: "DELETE"
         });
         if (!response.ok) {
-            throw new Error('Cooбщение не удалено');
+            throw new Error('Message not deleted');
+        }
+        return await response.json();
+    },
+    getStateInstance: async (credentials: Credentials): Promise<StateInstanceResponse> => {
+        const { idInstance, apiTokenInstance } = credentials;
+        const isntanseBaseUrl = getBaseUrl(idInstance);
+        const response = await fetch(`${isntanseBaseUrl}/waInstance${idInstance}/getStateInstance/${apiTokenInstance}`);
+        if (!response.ok) {
+            throw new Error('Invalid idInstance or token');
         }
         return await response.json();
     }

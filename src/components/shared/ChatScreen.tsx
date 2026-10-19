@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { Credentials, UIMessage } from "../../types";
 import { greenApi } from "../../api/greenApi";
-import { cn } from "../../lib/utils/tailwindClasses";
 import { SendMessageForm } from "./SendMessageForm";
+import { MessageList } from "./MessageList";
 
 interface ChatScreenProps {
   credentials: Credentials;
@@ -14,9 +14,12 @@ export function ChatScreen({
   chatId,
   onCloseChat,
 }: ChatScreenProps) {
-  const msgsRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<UIMessage[]>([]);
   const [isPending, startTransition] = useTransition();
+  const handleCloseChat = () => {
+    onCloseChat();
+    setMessages([]);
+  };
   const handleSend = (msg: string) => {
     startTransition(async () => {
       if (!chatId) return;
@@ -35,6 +38,7 @@ export function ChatScreen({
     });
   };
   useEffect(() => {
+    if (!chatId) return;
     let isMounted = true;
     const poll = async () => {
       try {
@@ -67,11 +71,6 @@ export function ChatScreen({
       isMounted = false;
     };
   }, [credentials, chatId]);
-  useEffect(() => {
-    if (msgsRef.current) {
-      msgsRef.current.scrollTop = msgsRef.current.scrollHeight;
-    }
-  }, [messages]);
   if (!chatId)
     return (
       <div className="flex text-white text-2xl font-bold p-10 items-center justify-center">
@@ -82,28 +81,14 @@ export function ChatScreen({
     <div className="w-full h-screen flex flex-col gap-4 p-4">
       <header className="bg-slate-300 p-5 rounded-2xl flex items-center justify-between">
         <p>Chat: {chatId}</p>
-        <button onClick={onCloseChat} className="md:hidden block">
-          ⬅ BACK
+        <button
+          onClick={handleCloseChat}
+          className="md:hidden block text-xl font-bold"
+        >
+          ← BACK
         </button>
       </header>
-      <div
-        ref={msgsRef}
-        className="w-full flex-1 flex flex-col  overflow-y-auto gap-8"
-      >
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={cn(
-              "p-4 text-white first:mt-auto",
-              m.isOutgoing
-                ? "bg-blue-600 self-end rounded-t-2xl rounded-bl-2xl"
-                : "bg-slate-400 self-start rounded-t-2xl rounded-br-2xl",
-            )}
-          >
-            {m.text}
-          </div>
-        ))}
-      </div>
+      <MessageList messages={messages} />
       <SendMessageForm isPending={isPending} onSend={handleSend} />
     </div>
   );

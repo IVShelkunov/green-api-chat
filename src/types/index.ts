@@ -46,6 +46,9 @@ export interface DeleteNotificationResponse {
     result: boolean;
     reason?: string;
 }
+export interface StateInstanceResponse {
+    stateInstance: string;
+}
 export interface UIMessage {
     id: string;
     text: string;
