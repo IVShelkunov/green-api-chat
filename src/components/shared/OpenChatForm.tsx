@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FormGroup } from "./FormGroup";
 import { SubmitButton } from "../ui/SubmitButton";
 import { ErrorMessage } from "../ui/ErrorMesage";
+import { formatPhoneNumber } from "../../lib/utils/phone";
 
 export function OpenChatForm({
   onOpenChat,
@@ -12,15 +13,12 @@ export function OpenChatForm({
   const [error, setError] = useState<string | null>(null);
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let digits = phone.replace(/\D/g, "");
-    if (digits.length === 11 && digits.startsWith("8")) {
-      digits = digits.replace(/^8/, "7");
-    }
-    if (digits.length < 10 || digits.length > 15) {
-      setError("Enter a valid phone number");
+    const resultCheckPhone = formatPhoneNumber(phone);
+    if (!resultCheckPhone.isValid) {
+      setError(resultCheckPhone.error);
       return;
     }
-    onOpenChat(`${digits}@c.us`);
+    onOpenChat(resultCheckPhone.chatId);
     setPhone("");
   };
   return (
