@@ -21,7 +21,7 @@ function App() {
     localStorage.removeItem("auth");
   };
   return (
-    <main className="relative w-full h-screen bg-linear-to-br from-blue-950 via-sky-500 to-violet-800 flex items-center justify-center">
+    <main className="relative w-full h-dvh bg-linear-to-br from-blue-950 via-sky-500 to-violet-800 flex items-center justify-center">
       {credentials ? (
         <ChatLayout onLogout={handleLogout} credentials={credentials} />
       ) : (
