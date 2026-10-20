@@ -78,7 +78,7 @@ export function ChatScreen({
       </div>
     );
   return (
-    <div className="w-full h-dvh flex flex-col gap-4 p-4">
+    <div className="w-full h-full flex flex-col gap-4 p-4">
       <header className="bg-slate-300 p-5 rounded-2xl flex items-center justify-between">
         <p>Chat: {chatId}</p>
         <button

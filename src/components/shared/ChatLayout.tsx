@@ -14,7 +14,7 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
     setActiveChatId(chatId);
   };
   return (
-    <div className={cn(" flex md:flex-row w-full h-screen")}>
+    <div className={cn(" flex md:flex-row w-full h-full")}>
       <div
         className={cn(
           "bg-white md:w-1/3 w-full h-full flex flex-col items-center ",
